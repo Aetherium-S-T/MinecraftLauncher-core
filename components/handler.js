@@ -133,6 +133,7 @@ class Handler {
 			);
 			if (fs.existsSync(versionJsonPath)) {
 				this.version = JSON.parse(fs.readFileSync(versionJsonPath));
+				this.version.id = this.options.version.number;
 				return resolve(this.version);
 			}
 
