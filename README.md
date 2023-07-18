@@ -7,7 +7,7 @@
 ![version](https://img.shields.io/badge/stable_version-3.17.1-blue)
 ![badge](https://img.shields.io/badge/ncurses-not_supported-purple)
 
-MCLC (Minecraft Launcher Core) is a NodeJS solution for launching modded and vanilla Minecraft without having to download and format everything yourself.
+SCCore (Minecraft Launcher Core) is a NodeJS solution for launching modded and vanilla Minecraft without having to download and format everything yourself.
 Basically a core for your Electron or script based launchers.
 
 ### Getting support
@@ -34,7 +34,7 @@ let opts = {
 	// For production launchers, I recommend not passing
 	// the getAuth function through the authorization field and instead
 	// handling authentication outside before you initialize
-	// MCLC so you can handle auth based errors and validation!
+	// SCCore so you can handle auth based errors and validation!
 	authorization: Authenticator.getAuth("username", "password"),
 	root: "./minecraft",
 	version: {
@@ -70,7 +70,7 @@ launcher.on("data", e => console.log(e));
 | `options.installer`            | String  | Path to installer being executed.                                                                                               | False    |
 | `options.root`                 | String  | Path where you want the launcher to work in. `C:/Users/user/AppData/Roaming/.mc`                                                | True     |
 | `options.cache`                | String  | Path where launcher files will be cached in. `C:/Users/user/AppData/Roaming/.mc/cache`                                          | False    |
-| `options.os`                   | String  | windows, osx or linux. MCLC will auto determine the OS if this field isn't provided.                                            | False    |
+| `options.os`                   | String  | windows, osx or linux. SCCore will auto determine the OS if this field isn't provided.                                          | False    |
 | `options.customLaunchArgs`     | Array   | Array of custom Minecraft arguments you want to add.                                                                            | False    |
 | `options.customArgs`           | Array   | Array of custom Java arguments you want to add.                                                                                 | False    |
 | `options.features`             | Array   | Array of game argument feature flags. ex: `is_demo_user` or `has_custom_resolution`                                             | False    |
@@ -94,7 +94,7 @@ launcher.on("data", e => console.log(e));
 | `options.window.fullscreen`    | Boolean | Fullscreen the Minecraft Client.                                                                                                | False    |
 | `options.overrides`            | Object  | Json object redefining paths for better customization. Example below.                                                           | False    |
 
-#### IF YOU'RE NEW TO MCLC, LET IT HANDLE EVERYTHING! DO NOT USE OVERRIDES!
+#### IF YOU'RE NEW TO SCCore, LET IT HANDLE EVERYTHING! DO NOT USE OVERRIDES!
 
 ```js
 let opts = {
@@ -123,7 +123,7 @@ let opts = {
                                                                 // in the version json.
            fallbackMaven: 'https://search.maven.org/remotecontent?filepath='
        },
-       // The following is options for which version of ForgeWrapper MCLC uses. This allows us to launch modern Forge.
+       // The following is options for which version of ForgeWrapper SCCore uses. This allows us to launch modern Forge.
        fw: {
         baseUrl: 'https://github.com/ZekerZhayard/ForgeWrapper/releases/download/',
         version: '1.5.1',
@@ -139,7 +139,7 @@ let opts = {
 
 ##### Custom
 
-If you are loading up a client outside of vanilla Minecraft or Forge (Optifine and for an example), you'll need to download the needed files yourself if you don't provide downloads url downloads like Forge and Fabric. If no version jar is specified, MCLC will default back to the normal MC jar so mods like Fabric work.
+If you are loading up a client outside of vanilla Minecraft or Forge (Optifine and for an example), you'll need to download the needed files yourself if you don't provide downloads url downloads like Forge and Fabric. If no version jar is specified, SCCore will default back to the normal MC jar so mods like Fabric work.
 
 ##### Installer
 
@@ -147,7 +147,7 @@ This runs an executable with specified launch arguments. Was used to support For
 
 ##### Authentication
 
-MCLC's authenticator module does not support Microsoft authentication. You will need to use a library like [MSMC](https://github.com/Hanro50/MSMC). If you want to create your own solution, the following is the authorization JSON object format.
+SCCore's authenticator module does not support Microsoft authentication. You will need to use a library like [MSMC](https://github.com/Hanro50/MSMC). If you want to create your own solution, the following is the authorization JSON object format.
 
 ```js
 {
@@ -206,9 +206,9 @@ MCLC's authenticator module does not support Microsoft authentication. You will 
 
 ##### changeApiUrl
 
-| Parameter | Type   | Description                                                  | Required |
-| --------- | ------ | ------------------------------------------------------------ | -------- |
-| `url`     | String | New URL that MCLC will make calls to authenticate the login. | True     |
+| Parameter | Type   | Description                                                    | Required |
+| --------- | ------ | -------------------------------------------------------------- | -------- |
+| `url`     | String | New URL that SCCore will make calls to authenticate the login. | True     |
 
 #### Events
 

@@ -38,7 +38,7 @@ declare module "silent-minecraft-launcher-core" {
 		 */
 		clientPackage?: string;
 		/**
-		 * if true MCLC will remove the client package zip file after its finished extracting.
+		 * if true SCCore will remove the client package zip file after its finished extracting.
 		 */
 		removePackage?: boolean;
 		/**
@@ -85,7 +85,7 @@ declare module "silent-minecraft-launcher-core" {
 			/**
 			 * 	The name of the folder, jar file, and version json in the version folder.
 			 *
-			 * ` MCLC will look in the `versions` folder for this name
+			 * ` SCCore will look in the `versions` folder for this name
 			 * @example '1.16.4-fabric'
 			 */
 			custom?: string;

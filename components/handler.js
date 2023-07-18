@@ -27,7 +27,7 @@ class Handler {
 				} else {
 					this.client.emit(
 						"debug",
-						`[MCLC]: Using Java version ${stderr.match(/"(.*?)"/).pop()} ${
+						`[SCCore]: Using Java version ${stderr.match(/"(.*?)"/).pop()} ${
 							stderr.includes("64-Bit") ? "64-bit" : "32-Bit"
 						}`
 					);
@@ -52,7 +52,7 @@ class Handler {
 				if (data.statusCode === 404) {
 					this.client.emit(
 						"debug",
-						`[MCLC]: Failed to download ${url} due to: File not found...`
+						`[SCCore]: Failed to download ${url} due to: File not found...`
 					);
 					return resolve(false);
 				}
@@ -63,7 +63,7 @@ class Handler {
 			_request.on("error", async error => {
 				this.client.emit(
 					"debug",
-					`[MCLC]: Failed to download asset to ${path.join(
+					`[SCCore]: Failed to download asset to ${path.join(
 						directory,
 						name
 					)} due to\n${error}.` + ` Retrying... ${retry}`
@@ -96,7 +96,7 @@ class Handler {
 			file.on("error", async e => {
 				this.client.emit(
 					"debug",
-					`[MCLC]: Failed to download asset to ${path.join(
+					`[SCCore]: Failed to download asset to ${path.join(
 						directory,
 						name
 					)} due to\n${e}.` + ` Retrying... ${retry}`
@@ -115,7 +115,7 @@ class Handler {
 				if (err) {
 					this.client.emit(
 						"debug",
-						`[MCLC]: Failed to check file hash due to ${err}`
+						`[SCCore]: Failed to check file hash due to ${err}`
 					);
 					resolve(false);
 				} else {
@@ -146,14 +146,17 @@ class Handler {
 				if (!error) {
 					if (!fs.existsSync(cache)) {
 						fs.mkdirSync(cache, { recursive: true });
-						this.client.emit("debug", "[MCLC]: Cache directory created.");
+						this.client.emit("debug", "[SCCore]: Cache directory created.");
 					}
 					fs.writeFile(
 						path.join(`${cache}/version_manifest.json`),
 						body,
 						err => {
 							if (err) return resolve(err);
-							this.client.emit("debug", "[MCLC]: Cached version_manifest.json");
+							this.client.emit(
+								"debug",
+								"[SCCore]: Cached version_manifest.json"
+							);
 						}
 					);
 				}
@@ -183,7 +186,7 @@ class Handler {
 											if (err) return resolve(err);
 											this.client.emit(
 												"debug",
-												`[MCLC]: Cached ${this.options.version.number}.json`
+												`[SCCore]: Cached ${this.options.version.number}.json`
 											);
 										}
 									);
@@ -191,7 +194,7 @@ class Handler {
 
 								this.client.emit(
 									"debug",
-									"[MCLC]: Parsed version from version manifest"
+									"[SCCore]: Parsed version from version manifest"
 								);
 								if (error && error.code === "ENOTFOUND") {
 									this.version = JSON.parse(
@@ -231,7 +234,7 @@ class Handler {
 
 		return this.client.emit(
 			"debug",
-			"[MCLC]: Downloaded version jar and wrote version json"
+			"[SCCore]: Downloaded version jar and wrote version json"
 		);
 	}
 
@@ -239,7 +242,7 @@ class Handler {
 		const assetDirectory = path.resolve(
 			this.options.overrides.assetRoot || path.join(this.options.root, "assets")
 		);
-		const assetId = this.options.version.custom || this.options.version.number;
+		const assetId = this.options.version.number;
 		if (
 			!fs.existsSync(path.join(assetDirectory, "indexes", `${assetId}.json`))
 		) {
@@ -297,7 +300,7 @@ class Handler {
 			if (fs.existsSync(path.join(assetDirectory, "legacy"))) {
 				this.client.emit(
 					"debug",
-					"[MCLC]: The 'legacy' directory is no longer used as Minecraft looks " +
+					"[SCCore]: The 'legacy' directory is no longer used as Minecraft looks " +
 						"for the resouces folder regardless of what is passed in the assetDirecotry launch option. I'd " +
 						`recommend removing the directory (${path.join(
 							assetDirectory,
@@ -309,7 +312,7 @@ class Handler {
 			const legacyDirectory = path.join(this.options.root, "resources");
 			this.client.emit(
 				"debug",
-				`[MCLC]: Copying assets over to ${legacyDirectory}`
+				`[SCCore]: Copying assets over to ${legacyDirectory}`
 			);
 
 			this.client.emit("progress", {
@@ -352,7 +355,7 @@ class Handler {
 		}
 		counter = 0;
 
-		this.client.emit("debug", "[MCLC]: Downloaded assets");
+		this.client.emit("debug", "[SCCore]: Downloaded assets");
 	}
 
 	parseRule(lib) {
@@ -462,11 +465,14 @@ class Handler {
 					});
 				})
 			);
-			this.client.emit("debug", "[MCLC]: Downloaded and extracted natives");
+			this.client.emit("debug", "[SCCore]: Downloaded and extracted natives");
 		}
 
 		counter = 0;
-		this.client.emit("debug", `[MCLC]: Set native path to ${nativeDirectory}`);
+		this.client.emit(
+			"debug",
+			`[SCCore]: Set native path to ${nativeDirectory}`
+		);
 
 		return nativeDirectory;
 	}
@@ -506,7 +512,7 @@ class Handler {
 			`${this.version.id}`,
 			"version.json"
 		);
-		// Since we're building a proper "custom" JSON that will work nativly with MCLC, the version JSON will not
+		// Since we're building a proper "custom" JSON that will work nativly with SCCore, the version JSON will not
 		// be re-generated on the next run.
 		if (fs.existsSync(versionPath)) {
 			try {
@@ -517,10 +523,10 @@ class Handler {
 				) {
 					this.client.emit(
 						"debug",
-						"[MCLC]: Old ForgeWrapper has generated this version JSON, re-generating"
+						"[SCCore]: Old ForgeWrapper has generated this version JSON, re-generating"
 					);
 				} else {
-					// If forge is modern, add ForgeWrappers launch arguments and set forge to null so MCLC treats it as a custom json.
+					// If forge is modern, add ForgeWrappers launch arguments and set forge to null so SCCore treats it as a custom json.
 					if (this.isModernForge(json)) {
 						this.fwAddArgs();
 						this.options.forge = null;
@@ -531,14 +537,14 @@ class Handler {
 				console.warn(e);
 				this.client.emit(
 					"debug",
-					"[MCLC]: Failed to parse Forge version JSON, re-generating"
+					"[SCCore]: Failed to parse Forge version JSON, re-generating"
 				);
 			}
 		}
 
 		this.client.emit(
 			"debug",
-			"[MCLC]: Generating a proper version json, this might take a bit"
+			"[SCCore]: Generating a proper version json, this might take a bit"
 		);
 		const zipFile = new Zip(this.options.forge);
 		json = zipFile.readAsText("version.json");
@@ -551,11 +557,11 @@ class Handler {
 		} catch (e) {
 			this.client.emit(
 				"debug",
-				"[MCLC]: Failed to load json files for ForgeWrapper, using Vanilla instead"
+				"[SCCore]: Failed to load json files for ForgeWrapper, using Vanilla instead"
 			);
 			return null;
 		}
-		// Adding the installer libraries as mavenFiles so MCLC downloads them but doesn't add them to the class paths.
+		// Adding the installer libraries as mavenFiles so SCCore downloads them but doesn't add them to the class paths.
 		if (installerJson) {
 			json.mavenFiles
 				? (json.mavenFiles = json.mavenFiles.concat(installerJson.libraries))
@@ -566,7 +572,7 @@ class Handler {
 		let jarEnding = "universal";
 		// We need to handle modern forge differently than legacy.
 		if (this.isModernForge(json)) {
-			// If forge is modern and above 1.12.2, we add ForgeWrapper to the libraries so MCLC includes it in the classpaths.
+			// If forge is modern and above 1.12.2, we add ForgeWrapper to the libraries so SCCore includes it in the classpaths.
 			if (json.inheritsFrom !== "1.12.2") {
 				this.fwAddArgs();
 				const fwName = `ForgeWrapper-${this.options.overrides.fw.version}.jar`;
@@ -612,7 +618,7 @@ class Handler {
 				}
 			}
 		} else {
-			// Modifying legacy library format to play nice with MCLC's downloadToDirectory function.
+			// Modifying legacy library format to play nice with SCCore's downloadToDirectory function.
 			await Promise.all(
 				json.libraries.map(async library => {
 					const lib = library.name.split(":");
@@ -639,7 +645,7 @@ class Handler {
 						if (error) {
 							this.client.emit(
 								"debug",
-								`[MCLC]: Failed checking request for ${downloadLink}`
+								`[SCCore]: Failed checking request for ${downloadLink}`
 							);
 						} else {
 							if (response.statusCode === 404)
@@ -683,7 +689,7 @@ class Handler {
 		}
 		fs.writeFileSync(versionPath, JSON.stringify(json, null, 4));
 
-		// Make MCLC treat modern forge as a custom version json rather then legacy forge.
+		// Make SCCore treat modern forge as a custom version json rather then legacy forge.
 		if (this.isModernForge(json)) this.options.forge = null;
 
 		return json;
@@ -806,7 +812,7 @@ class Handler {
 		// Temp Quilt support
 		if (classJson) libs.sort();
 
-		this.client.emit("debug", "[MCLC]: Collected class paths");
+		this.client.emit("debug", "[SCCore]: Collected class paths");
 		return libs;
 	}
 
@@ -838,7 +844,7 @@ class Handler {
 		if (!keys.includes(type)) {
 			this.client.emit(
 				"debug",
-				`[MCLC]: quickPlay type is not valid. Valid types are: ${keys.join(
+				`[SCCore]: quickPlay type is not valid. Valid types are: ${keys.join(
 					", "
 				)}`
 			);
@@ -984,7 +990,7 @@ class Handler {
 		if (this.options.server)
 			this.client.emit(
 				"debug",
-				"[MCLC]: server and port are deprecated launch flags. Use the quickPlay field."
+				"[SCCore]: server and port are deprecated launch flags. Use the quickPlay field."
 			);
 		if (this.options.quickPlay) args = args.concat(this.formatQuickPlay());
 		if (this.options.proxy) {
@@ -1002,7 +1008,7 @@ class Handler {
 		args = args.filter(
 			value => typeof value === "string" || typeof value === "number"
 		);
-		this.client.emit("debug", "[MCLC]: Set launch options");
+		this.client.emit("debug", "[SCCore]: Set launch options");
 		return args;
 	}
 
@@ -1040,7 +1046,10 @@ class Handler {
 	// To prevent launchers from breaking when they update. Will be reworked with rewrite.
 	getMemory() {
 		if (!this.options.memory) {
-			this.client.emit("debug", "[MCLC]: Memory not set! Setting 1GB as MAX!");
+			this.client.emit(
+				"debug",
+				"[SCCore]: Memory not set! Setting 1GB as MAX!"
+			);
 			this.options.memory = {
 				min: 512,
 				max: 1023,
@@ -1050,7 +1059,7 @@ class Handler {
 			if (this.options.memory.max < this.options.memory.min) {
 				this.client.emit(
 					"debug",
-					"[MCLC]: MIN memory is higher then MAX! Resetting!"
+					"[SCCore]: MIN memory is higher then MAX! Resetting!"
 				);
 				this.options.memory.max = 1023;
 				this.options.memory.min = 512;
