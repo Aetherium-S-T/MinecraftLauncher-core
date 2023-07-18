@@ -133,7 +133,6 @@ class Handler {
 			);
 			if (fs.existsSync(versionJsonPath)) {
 				this.version = JSON.parse(fs.readFileSync(versionJsonPath));
-				this.version.id = this.options.version.number;
 				return resolve(this.version);
 			}
 
@@ -242,7 +241,7 @@ class Handler {
 		const assetDirectory = path.resolve(
 			this.options.overrides.assetRoot || path.join(this.options.root, "assets")
 		);
-		const assetId = this.options.version.number;
+		const assetId = this.options.version.custom || this.options.version.number;
 		if (
 			!fs.existsSync(path.join(assetDirectory, "indexes", `${assetId}.json`))
 		) {
