@@ -1,4 +1,5 @@
 const fs = require("fs");
+const http = require("http");
 const path = require("path");
 const request = require("request");
 const checksum = require("checksum");
@@ -13,6 +14,9 @@ class Handler {
 		this.baseRequest = request.defaults({
 			pool: { maxSockets: this.options.overrides.maxSockets || 2 },
 			timeout: this.options.timeout || 10000,
+			agentOptions: {
+				family: 4,
+			},
 		});
 	}
 
