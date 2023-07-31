@@ -61,6 +61,10 @@ declare module "silent-minecraft-launcher-core" {
 		 */
 		customLaunchArgs?: Array<string>;
 		/**
+		 * Array of custom Minecraft libs.
+		 */
+		customLibs?: Array<string>;
+		/**
 		 * Array of custom Java arguments
 		 */
 		customArgs?: Array<string>;
