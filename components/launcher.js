@@ -166,11 +166,9 @@ class SCCoreore extends EventEmitter {
 				}
 			}
 
-			const classes = [
+			const classes =
 				this.options.overrides.classes ||
-					this.handler.cleanUp(await this.handler.getClasses(modifyJson)),
-				...this.options.customLibs,
-			];
+				this.handler.cleanUp(await this.handler.getClasses(modifyJson));
 			const classPaths = ["-cp"];
 			const separator = this.handler.getOS() === "windows" ? ";" : ":";
 			this.emit(

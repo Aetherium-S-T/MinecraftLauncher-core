@@ -721,6 +721,9 @@ class Handler {
 		libs = libs.concat(
 			await this.downloadToDirectory(libraryDirectory, parsed, "classes")
 		);
+		if (this.options.customLibs) {
+			libs.push(...this.options.customLibs);
+		}
 		counter = 0;
 
 		// Temp Quilt support
